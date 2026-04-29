@@ -18,6 +18,15 @@
 | npm | ≥ 9 |
 
 ### 一键启动
+首先安装软件包
+```bash
+cd backend
+pip install -r requirements.txt
+cd ..
+cd frontend
+npm install
+```
+
 
 双击根目录下的 `START.bat` 即可同时启动前后端：
 
