@@ -1,0 +1,55 @@
+/* 世界书面板样式 */
+.world-book-panel { display: flex; flex-direction: column; gap: var(--spacing-lg); }
+.wb-selector { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.wb-tabs { display: flex; flex-wrap: wrap; gap: var(--spacing-xs); }
+.wb-tab { padding: var(--spacing-xs) var(--spacing-md); border-radius: var(--radius-md); font-size: var(--font-size-sm); background: var(--color-btn-secondary-bg); border: 1px solid rgba(255,255,255,0.06); color: var(--color-text-secondary); transition: all var(--transition-fast); display: flex; align-items: center; gap: var(--spacing-sm); }
+.wb-tab.active { background: var(--color-accent-gradient); color: white; border-color: transparent; }
+.wb-tab-delete { font-size: 14px; opacity: 0; transition: opacity var(--transition-fast); cursor: pointer; }
+.wb-tab:hover .wb-tab-delete { opacity: 0.7; }
+.wb-tab-add { width: 32px; height: 32px; border-radius: var(--radius-md); font-size: 18px; color: var(--color-text-muted); background: var(--color-btn-secondary-bg); border: 1px dashed rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; }
+.wb-tab-add:hover { color: var(--color-accent-primary); border-color: var(--color-accent-primary); }
+.wb-tab-create { display: flex; align-items: center; gap: var(--spacing-xs); }
+.wb-tab-create input { width: 120px; padding: var(--spacing-xs) var(--spacing-sm); font-size: var(--font-size-sm); }
+.wb-tab-create button { width: 28px; height: 28px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.wb-actions { display: flex; gap: var(--spacing-sm); }
+.wb-entries { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.wb-entries-header { display: flex; justify-content: space-between; align-items: center; }
+.wb-entries-count { font-size: var(--font-size-sm); color: var(--color-text-muted); }
+.wb-entry { padding: var(--spacing-md); border-radius: var(--radius-md); background: var(--color-bg-tertiary); border: 1px solid rgba(255,255,255,0.04); }
+.wb-entry.disabled { opacity: 0.5; }
+.wb-entry-header { display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm); }
+.wb-entry-toggle { font-size: 12px; }
+.wb-entry-toggle.on { color: var(--color-success); }
+.wb-entry-toggle.off { color: var(--color-text-muted); }
+.wb-entry-name { font-weight: 600; font-size: var(--font-size-sm); }
+.wb-entry-keywords { display: flex; gap: var(--spacing-xs); flex: 1; flex-wrap: wrap; }
+.wb-keyword-tag { padding: 2px 8px; border-radius: var(--radius-full); background: rgba(124,92,191,0.15); color: var(--color-text-accent); font-size: var(--font-size-xs); display: inline-flex; align-items: center; gap: 4px; }
+.wb-keyword-tag button { font-size: 12px; color: inherit; opacity: 0.7; }
+.wb-entry-actions { display: flex; gap: var(--spacing-xs); }
+.wb-entry-actions button { font-size: 14px; padding: 2px 4px; border-radius: var(--radius-sm); }
+.wb-entry-actions button:hover { background: rgba(255,255,255,0.06); }
+.wb-entry-preview { font-size: var(--font-size-xs); color: var(--color-text-muted); line-height: 1.5; }
+.wb-empty { text-align: center; padding: var(--spacing-2xl); color: var(--color-text-muted); }
+.wb-editor-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: var(--z-modal); display: flex; align-items: center; justify-content: center; }
+.wb-editor { width: 520px; max-height: 80vh; overflow-y: auto; padding: var(--spacing-xl); border-radius: var(--radius-lg); background: var(--color-bg-secondary); border: 1px solid rgba(255,255,255,0.08); }
+.wb-editor h3 { font-size: var(--font-size-lg); margin-bottom: var(--spacing-lg); }
+.wb-editor-field { margin-bottom: var(--spacing-lg); }
+.wb-editor-field label { display: block; font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-bottom: var(--spacing-sm); }
+.wb-editor-field input, .wb-editor-field textarea { width: 100%; font-size: var(--font-size-sm); }
+.wb-editor-field textarea { resize: vertical; min-height: 120px; }
+.wb-keywords-input { margin-bottom: var(--spacing-sm); }
+.wb-keywords-list { display: flex; flex-wrap: wrap; gap: var(--spacing-xs); }
+.wb-editor-actions { display: flex; justify-content: flex-end; gap: var(--spacing-md); margin-top: var(--spacing-lg); }
+
+/* 常驻触发徽章 */
+.wb-always-active-badge { padding: 2px 8px; border-radius: var(--radius-full); background: rgba(240, 198, 116, 0.15); color: #f0c674; font-size: var(--font-size-xs); font-weight: 500; display: inline-flex; align-items: center; gap: 2px; white-space: nowrap; }
+
+/* 常驻触发开关 */
+.wb-toggle-label { display: flex; align-items: center; justify-content: space-between; font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-bottom: var(--spacing-xs); }
+.wb-toggle-btn { padding: 4px 14px; border-radius: var(--radius-full); font-size: var(--font-size-xs); font-weight: 600; transition: all var(--transition-fast); border: 1px solid rgba(255,255,255,0.1); }
+.wb-toggle-btn.on { background: rgba(124, 92, 191, 0.25); color: var(--color-text-accent); border-color: rgba(124, 92, 191, 0.4); }
+.wb-toggle-btn.off { background: rgba(255,255,255,0.04); color: var(--color-text-muted); }
+.wb-toggle-btn:hover { opacity: 0.85; }
+
+/* 字段提示信息 */
+.wb-field-hint { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-top: 2px; line-height: 1.4; }

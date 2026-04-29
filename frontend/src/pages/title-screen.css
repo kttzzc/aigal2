@@ -1,0 +1,121 @@
+/* 标题画面样式 */
+.title-screen {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0a0a12 0%, #12121e 30%, #1a1a3e 60%, #12121e 100%);
+}
+
+/* 粒子背景 */
+.ts-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.ts-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(124, 92, 191, 0.4);
+  border-radius: 50%;
+  animation: floatParticle linear infinite;
+}
+
+@keyframes floatParticle {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100vh) translateX(30px); opacity: 0; }
+}
+
+/* 内容 */
+.ts-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+/* 标题 */
+.ts-title {
+  font-size: 5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-md);
+}
+
+.ts-title-ai {
+  background: var(--color-accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+}
+
+.ts-title-gal {
+  color: var(--color-text-primary);
+  font-weight: 300;
+}
+
+.ts-subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  letter-spacing: 0.15em;
+  margin-bottom: var(--spacing-2xl);
+}
+
+/* 菜单 */
+.ts-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  min-width: 220px;
+}
+
+.ts-menu-btn {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+  transition: all var(--transition-base);
+  letter-spacing: 0.05em;
+}
+
+.ts-menu-btn:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(124, 92, 191, 0.3);
+}
+
+.ts-menu-primary {
+  background: var(--color-accent-gradient);
+  color: white;
+  border-color: transparent;
+}
+
+.ts-menu-primary:hover {
+  box-shadow: var(--shadow-glow);
+  border-color: transparent;
+  color: white;
+}
+
+/* 页脚 */
+.ts-footer {
+  position: absolute;
+  bottom: var(--spacing-lg);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.1em;
+}

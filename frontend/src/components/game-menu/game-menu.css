@@ -1,0 +1,113 @@
+/* 游戏菜单样式 */
+
+.game-menu {
+  position: fixed;
+  top: var(--spacing-lg);
+  right: var(--spacing-lg);
+  z-index: var(--z-menu);
+}
+
+/* 汉堡菜单按钮 */
+.game-menu-trigger {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 18, 0.6);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background var(--transition-fast);
+}
+
+.game-menu-trigger:hover {
+  background: rgba(10, 10, 18, 0.8);
+  border-color: rgba(124, 92, 191, 0.3);
+}
+
+/* 汉堡图标 */
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: transform var(--transition-fast);
+}
+
+.menu-icon span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--color-text-primary);
+  border-radius: 1px;
+  transition: all var(--transition-base);
+  transform-origin: center;
+}
+
+.menu-icon.open span:nth-child(1) {
+  transform: rotate(45deg) translate(4px, 4px);
+}
+
+.menu-icon.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-icon.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(4px, -4px);
+}
+
+/* 背景遮罩 */
+.game-menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: -1;
+}
+
+/* 菜单面板 */
+.game-menu-panel {
+  position: absolute;
+  top: 54px;
+  right: 0;
+  min-width: 160px;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-lg);
+  background: rgba(18, 18, 30, 0.95);
+  backdrop-filter: blur(var(--blur-lg));
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-lg);
+}
+
+/* 菜单项 */
+.game-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.game-menu-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-primary);
+}
+
+.menu-item-icon {
+  font-size: var(--font-size-base);
+  width: 24px;
+  text-align: center;
+}
+
+.menu-item-label {
+  font-weight: 500;
+}

@@ -1,0 +1,13 @@
+/* 变量面板样式 */
+.variable-panel { display: flex; flex-direction: column; gap: var(--spacing-md); }
+.vp-description { font-size: var(--font-size-sm); color: var(--color-text-muted); line-height: 1.6; }
+.vp-empty { text-align: center; padding: var(--spacing-2xl); color: var(--color-text-muted); }
+.vp-list { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+.vp-item { display: flex; align-items: center; gap: var(--spacing-md); padding: var(--spacing-md); border-radius: var(--radius-md); background: var(--color-bg-tertiary); border: 1px solid rgba(255,255,255,0.04); }
+.vp-key { font-size: var(--font-size-sm); font-weight: 600; color: var(--color-text-accent); min-width: 120px; }
+.vp-value-group { display: flex; align-items: center; gap: var(--spacing-sm); flex: 1; }
+.vp-value { font-size: var(--font-size-sm); color: var(--color-text-primary); flex: 1; }
+.vp-edit-btn { font-size: 14px; opacity: 0.4; transition: opacity var(--transition-fast); }
+.vp-edit-btn:hover { opacity: 1; }
+.vp-edit-group { display: flex; align-items: center; gap: var(--spacing-sm); flex: 1; }
+.vp-edit-input { flex: 1; padding: var(--spacing-xs) var(--spacing-sm); font-size: var(--font-size-sm); }

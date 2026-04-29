@@ -1,0 +1,58 @@
+/* 角色立绘样式 */
+.character-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--z-characters);
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.character-sprite {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  max-height: 90vh;
+}
+
+/* 左侧角色 */
+.character-left {
+  left: 5%;
+}
+
+/* 右侧角色 */
+.character-right {
+  right: 5%;
+}
+
+/* 中间角色（独白/特殊场景） */
+.character-middle {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.character-image {
+  max-height: 85vh;
+  width: auto;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+/* 说话角色：正常亮度 + 发光阴影 */
+.character-image.speaking {
+  filter: brightness(1) drop-shadow(0 0 20px rgba(124, 92, 191, 0.4));
+  transform: scale(1.02);
+}
+
+/* 非说话角色：降低亮度 */
+.character-image.dimmed {
+  filter: brightness(0.7);
+}

@@ -1,0 +1,15 @@
+/* 存档管理面板样式 */
+.save-load-panel { display: flex; flex-direction: column; gap: var(--spacing-lg); }
+.slp-title { font-size: var(--font-size-lg); font-weight: 600; }
+.slp-new-save { display: flex; gap: var(--spacing-md); }
+.slp-new-save input { flex: 1; font-size: var(--font-size-sm); }
+.slp-list { display: flex; flex-direction: column; gap: var(--spacing-sm); max-height: 400px; overflow-y: auto; }
+.slp-empty { text-align: center; padding: var(--spacing-2xl); color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.slp-item { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-md); border-radius: var(--radius-md); background: var(--color-bg-tertiary); border: 1px solid rgba(255,255,255,0.04); transition: border-color var(--transition-fast); }
+.slp-item:hover { border-color: rgba(124,92,191,0.2); }
+.slp-item-info { display: flex; flex-direction: column; gap: 2px; }
+.slp-item-name { font-weight: 600; font-size: var(--font-size-sm); }
+.slp-item-time { font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.slp-item-detail { font-size: var(--font-size-xs); color: var(--color-text-accent); }
+.slp-item-actions { display: flex; gap: var(--spacing-sm); align-items: center; }
+.btn-sm { padding: 4px 12px; font-size: var(--font-size-xs); }

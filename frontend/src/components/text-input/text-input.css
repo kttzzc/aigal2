@@ -1,0 +1,118 @@
+/* 玩家输入框样式 */
+
+.text-input-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: var(--z-input);
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  padding-bottom: var(--spacing-xl);
+
+  background: var(--color-dialog-bg);
+  backdrop-filter: blur(var(--blur-lg));
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  border-top: 1px solid var(--color-dialog-border);
+  box-shadow: var(--color-dialog-shadow);
+}
+
+.text-input-wrapper {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-end;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.text-input-field {
+  flex: 1;
+  resize: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  border-radius: var(--radius-lg);
+  background: rgba(26, 26, 46, 0.8);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  min-height: 52px;
+  max-height: 120px;
+}
+
+.text-input-field:focus {
+  border-color: var(--color-input-focus);
+  box-shadow: 0 0 0 3px var(--color-accent-glow);
+}
+
+.text-input-field::placeholder {
+  color: var(--color-text-muted);
+}
+
+.text-input-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 发送按钮 */
+.text-input-send {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-btn-secondary-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.text-input-send.active {
+  background: var(--color-accent-gradient);
+  border-color: transparent;
+  color: white;
+  box-shadow: var(--shadow-glow);
+}
+
+.text-input-send.active:hover {
+  transform: scale(1.05);
+}
+
+.text-input-send:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* 发送中加载动画 */
+.send-loading {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 提示文本 */
+.text-input-hint {
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-sm);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .text-input-container {
+    padding: var(--spacing-md);
+  }
+
+  .text-input-wrapper {
+    gap: var(--spacing-sm);
+  }
+}

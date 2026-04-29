@@ -1,0 +1,27 @@
+/* 提示词编辑器样式 */
+.prompt-editor { display: flex; height: 100%; min-height: 500px; gap: 0; }
+.pe-sidebar { width: 200px; flex-shrink: 0; border-right: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; }
+.pe-sidebar-header { padding: var(--spacing-md); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.pe-sidebar-title { font-size: var(--font-size-sm); font-weight: 600; color: var(--color-text-secondary); }
+.pe-add-btn { width: 24px; height: 24px; border-radius: var(--radius-sm); font-size: 16px; color: var(--color-text-muted); display: flex; align-items: center; justify-content: center; }
+.pe-add-btn:hover { background: rgba(255,255,255,0.06); color: var(--color-accent-primary); }
+.pe-create-form { display: flex; gap: 4px; }
+.pe-create-form input { width: 80px; padding: 2px 6px; font-size: var(--font-size-xs); }
+.pe-create-form button { font-size: 12px; padding: 2px 4px; }
+.pe-file-list { flex: 1; overflow-y: auto; padding: var(--spacing-sm); }
+.pe-file-item { display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); border-radius: var(--radius-md); cursor: pointer; font-size: var(--font-size-sm); color: var(--color-text-secondary); transition: all var(--transition-fast); }
+.pe-file-item:hover { background: rgba(255,255,255,0.04); }
+.pe-file-item.active { background: rgba(124,92,191,0.15); color: var(--color-text-primary); }
+.pe-file-icon { font-size: 14px; }
+.pe-file-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pe-file-badge { font-size: var(--font-size-xs); padding: 1px 6px; border-radius: var(--radius-full); background: var(--color-accent-gradient); color: white; }
+.pe-file-delete { font-size: 14px; opacity: 0; transition: opacity var(--transition-fast); }
+.pe-file-item:hover .pe-file-delete { opacity: 0.7; }
+.pe-main { flex: 1; display: flex; flex-direction: column; }
+.pe-toolbar { display: flex; align-items: center; gap: var(--spacing-md); padding: var(--spacing-md) var(--spacing-lg); border-bottom: 1px solid rgba(255,255,255,0.06); }
+.pe-filename { font-size: var(--font-size-sm); font-weight: 500; color: var(--color-text-primary); }
+.pe-unsaved { font-size: var(--font-size-xs); color: var(--color-warning); }
+.pe-toolbar-actions { margin-left: auto; display: flex; gap: var(--spacing-sm); }
+.pe-textarea { flex: 1; resize: none; padding: var(--spacing-lg); font-size: var(--font-size-sm); font-family: 'Consolas', 'Monaco', monospace; line-height: 1.8; background: var(--color-bg-primary); border: none; border-radius: 0; color: var(--color-text-primary); }
+.pe-textarea:focus { box-shadow: none; }
+.pe-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--color-text-muted); }

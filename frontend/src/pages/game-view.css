@@ -1,0 +1,16 @@
+/* 游戏主页面样式 */
+.game-view {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 实验性 UI 模式：对话框和输入框底部留出操作栏空间 */
+.experimental-ui .dialogue-box {
+  bottom: 40px;
+}
+
+.experimental-ui .text-input-container {
+  bottom: 40px;
+}

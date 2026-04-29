@@ -1,0 +1,264 @@
+/* 关于页面样式 */
+.about-page {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: linear-gradient(135deg, #0a0a12 0%, #12121e 30%, #1a1a3e 60%, #12121e 100%);
+  padding: var(--spacing-2xl) var(--spacing-xl);
+}
+
+/* 背景粒子 */
+.about-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.about-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(124, 92, 191, 0.3);
+  border-radius: 50%;
+  animation: floatParticle linear infinite;
+}
+
+/* 内容区域 */
+.about-content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  width: 100%;
+}
+
+/* 返回按钮 */
+.about-back-btn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  padding: var(--spacing-sm) 0;
+  margin-bottom: var(--spacing-xl);
+  transition: color var(--transition-fast);
+  letter-spacing: 0.05em;
+}
+
+.about-back-btn:hover {
+  color: var(--color-accent-primary);
+}
+
+/* 头部 */
+.about-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.about-title {
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-sm);
+}
+
+.about-title-ai {
+  background: var(--color-accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about-title-gal {
+  color: var(--color-text-primary);
+  font-weight: 300;
+}
+
+.about-subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  letter-spacing: 0.12em;
+  margin-bottom: var(--spacing-xs);
+}
+
+.about-version {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  letter-spacing: 0.1em;
+}
+
+/* 段落 */
+.about-section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.about-section-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-lg);
+  letter-spacing: 0.03em;
+}
+
+.about-desc {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  line-height: 1.9;
+  text-align: center;
+}
+
+/* 特性网格 */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.about-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  transition: all var(--transition-base);
+}
+
+.about-card:hover {
+  background: rgba(124, 92, 191, 0.06);
+  border-color: rgba(124, 92, 191, 0.2);
+}
+
+.about-card-icon {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-sm);
+  display: block;
+}
+
+.about-card-title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.about-card-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* 技术栈列表 */
+.about-tech-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.about-tech-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+
+.about-tech-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.about-tech-icon {
+  font-size: 1.2rem;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.about-tech-name {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  min-width: 130px;
+}
+
+.about-tech-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* GitHub 仓库卡片 */
+.about-repo-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition-base);
+}
+
+.about-repo-link:hover {
+  background: rgba(124, 92, 191, 0.08);
+  border-color: rgba(124, 92, 191, 0.3);
+  box-shadow: 0 0 20px rgba(124, 92, 191, 0.1);
+}
+
+.about-repo-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.about-repo-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.about-repo-name {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.about-repo-url {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.about-repo-arrow {
+  font-size: var(--font-size-lg);
+  color: var(--color-accent-primary);
+  transition: transform var(--transition-fast);
+}
+
+.about-repo-link:hover .about-repo-arrow {
+  transform: translateX(4px);
+}
+
+/* 页脚 */
+.about-footer {
+  text-align: center;
+  padding: var(--spacing-2xl) 0 var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  opacity: 0.6;
+  letter-spacing: 0.05em;
+}
+
+/* 响应式 */
+@media (max-width: 600px) {
+  .about-title { font-size: 3rem; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-tech-name { min-width: 100px; }
+}

@@ -1,0 +1,153 @@
+/* 对话框样式 — 半透明玻璃拟态 Galgame 风格 */
+
+.dialogue-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: var(--z-dialog);
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  padding-top: var(--spacing-lg);
+  min-height: 200px;
+  cursor: pointer;
+  user-select: none;
+
+  /* 玻璃拟态背景 */
+  background: var(--color-dialog-bg);
+  backdrop-filter: blur(var(--blur-lg));
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  border-top: 1px solid var(--color-dialog-border);
+  box-shadow: var(--color-dialog-shadow);
+}
+
+/* 角色名标签 */
+.dialogue-name-tag {
+  position: absolute;
+  top: -18px;
+  left: var(--spacing-2xl);
+  padding: var(--spacing-xs) var(--spacing-lg);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+
+  /* 渐变背景 */
+  background: var(--color-accent-gradient);
+  box-shadow: 0 -4px 16px var(--color-accent-glow);
+}
+
+.dialogue-name {
+  font-size: var(--font-size-name);
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.05em;
+}
+
+/* 对话内容 */
+.dialogue-content {
+  padding-top: var(--spacing-sm);
+  min-height: 100px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.dialogue-text {
+  font-size: var(--font-size-dialog);
+  line-height: 2;
+  color: var(--color-text-primary);
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  word-break: break-word;
+}
+
+/* 加载动画 */
+.dialogue-loading {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  padding: var(--spacing-md) 0;
+}
+
+.loading-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent-primary);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.loading-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* 继续提示 */
+.dialogue-continue {
+  position: absolute;
+  bottom: var(--spacing-md);
+  right: var(--spacing-2xl);
+}
+
+.continue-indicator {
+  font-size: var(--font-size-sm);
+  color: var(--color-accent-primary);
+  animation: bounceDown 1s ease-in-out infinite;
+}
+
+.continue-indicator.input-ready {
+  animation: pulse 1.5s ease-in-out infinite;
+  color: var(--color-success);
+}
+
+/* TTS 播放按钮 */
+.dialogue-tts-btn {
+  position: absolute;
+  bottom: var(--spacing-md);
+  right: calc(var(--spacing-2xl) + 30px);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 2;
+}
+
+.dialogue-tts-btn:hover {
+  background: rgba(124, 92, 191, 0.2);
+  border-color: rgba(124, 92, 191, 0.4);
+}
+
+.dialogue-tts-btn.playing {
+  background: rgba(124, 92, 191, 0.25);
+  border-color: rgba(124, 92, 191, 0.5);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.dialogue-tts-btn.loading {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* 响应式 — 移动端对话框更紧凑 */
+@media (max-width: 768px) {
+  .dialogue-box {
+    padding: var(--spacing-lg) var(--spacing-md);
+    min-height: 160px;
+  }
+
+  .dialogue-name-tag {
+    left: var(--spacing-md);
+  }
+
+  .dialogue-text {
+    font-size: var(--font-size-base);
+    line-height: 1.8;
+  }
+}
