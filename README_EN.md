@@ -6,6 +6,9 @@
 > Traditional visual novels, while featuring excellent plots, often suffer from having only a few fixed dialogue branches. Players are forced to passively answer "multiple-choice questions," which loses its charm once you clear the game.
 > However, in AIgal, **there are no predetermined scripts and no rigid options!** You can type anything you want to say or do using natural language. The AI will dynamically generate the plot, character reactions, and even automatically switch backgrounds and character sprites based on your actions. Every choice you make leads to a unique, infinitely branching immersive adventure.
 
+## preview
+![preview](preview.png)
+
 ---
 
 ## 🚀 Quick Start
