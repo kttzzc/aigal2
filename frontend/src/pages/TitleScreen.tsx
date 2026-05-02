@@ -4,12 +4,19 @@
  */
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useGameStore } from '../store/game-store';
 import './title-screen.css';
 
 export default function TitleScreen() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const { isGameStarted, resetGame } = useGameStore();
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'en' ? 'zh' : 'en';
+    i18n.changeLanguage(newLang);
+  };
 
   const handleNewGame = () => {
     resetGame();
@@ -61,7 +68,7 @@ export default function TitleScreen() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.6 }}
         >
-          由 AI 驱动的视觉小说引擎
+          {t('title_screen.title_sub')}
         </motion.p>
 
         {/* 菜单按钮 */}
@@ -77,7 +84,7 @@ export default function TitleScreen() {
             whileTap={{ scale: 0.98 }}
             onClick={handleNewGame}
           >
-            新的故事
+            {t('title_screen.btn_new_game')}
           </motion.button>
 
           {isGameStarted && (
@@ -89,7 +96,7 @@ export default function TitleScreen() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
             >
-              继续游戏
+              {t('title_screen.btn_continue')}
             </motion.button>
           )}
 
@@ -99,7 +106,7 @@ export default function TitleScreen() {
             whileTap={{ scale: 0.98 }}
             onClick={() => navigate('/game')}
           >
-            进入游戏
+            {t('title_screen.btn_enter_game')}
           </motion.button>
 
           <motion.button
@@ -108,14 +115,17 @@ export default function TitleScreen() {
             whileTap={{ scale: 0.98 }}
             onClick={() => navigate('/about')}
           >
-            关于
+            {t('title_screen.btn_about')}
           </motion.button>
         </motion.div>
       </motion.div>
 
-      {/* 版本信息 */}
+      {/* 底部 */}
       <div className="ts-footer">
-        <span>AIgal Engine v1.0.1</span>
+        <button className="ts-lang-btn" onClick={toggleLanguage}>
+          {i18n.language === 'en' ? 'English' : '简体中文'}
+        </button>
+        <span>AIgal v1.0.1</span>
       </div>
     </div>
   );

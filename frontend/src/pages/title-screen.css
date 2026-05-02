@@ -111,11 +111,33 @@
   color: white;
 }
 
-/* 页脚 */
+/* 底部 */
 .ts-footer {
   position: absolute;
   bottom: var(--spacing-lg);
+  width: 100%;
+  padding: 0 var(--spacing-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
   letter-spacing: 0.1em;
+  box-sizing: border-box;
+}
+
+.ts-lang-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--color-text-secondary);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ts-lang-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-primary);
 }

@@ -13,25 +13,28 @@ import UIEditor from '../features/ui-editor/UIEditor';
 import VariablePanel from '../components/variable-panel/VariablePanel';
 import './settings-page.css';
 
+import { useTranslation } from 'react-i18next';
+
 type TabId = 'general' | 'worldBook' | 'promptEditor' | 'assetManager' | 'uiEditor' | 'variables';
 
 interface TabItem {
   id: TabId;
-  label: string;
+  labelKey: string;
   icon: string;
 }
 
 const TABS: TabItem[] = [
-  { id: 'general', label: '通用设置', icon: '⚙️' },
-  { id: 'worldBook', label: '世界书', icon: '📖' },
-  { id: 'promptEditor', label: '系统提示词', icon: '📝' },
-  { id: 'assetManager', label: '素材管理', icon: '🎨' },
-  { id: 'uiEditor', label: 'UI 编辑器', icon: '🖌️' },
-  { id: 'variables', label: '全局变量', icon: '📊' },
+  { id: 'general', labelKey: 'settings.tab_general', icon: '⚙️' },
+  { id: 'worldBook', labelKey: 'settings.tab_world_book', icon: '📖' },
+  { id: 'promptEditor', labelKey: 'settings.tab_prompt_editor', icon: '📝' },
+  { id: 'assetManager', labelKey: 'settings.tab_asset_manager', icon: '🎨' },
+  { id: 'uiEditor', labelKey: 'settings.tab_ui_editor', icon: '🖌️' },
+  { id: 'variables', labelKey: 'settings.tab_variables', icon: '📊' },
 ];
 
 export default function SettingsPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabId>('general');
 
   const renderContent = () => {
@@ -51,7 +54,7 @@ export default function SettingsPage() {
       <nav className="sp-sidebar">
         <div className="sp-sidebar-header">
           <button className="sp-back-btn" onClick={() => navigate(-1)}>
-            ← 返回
+            {t('settings.btn_back')}
           </button>
           <h2 className="sp-sidebar-title">System</h2>
         </div>
@@ -66,20 +69,20 @@ export default function SettingsPage() {
               whileTap={{ scale: 0.98 }}
             >
               <span className="sp-tab-icon">{tab.icon}</span>
-              <span className="sp-tab-label">{tab.label}</span>
+              <span className="sp-tab-label">{t(tab.labelKey)}</span>
             </motion.button>
           ))}
         </div>
 
         <div className="sp-sidebar-footer">
-          <span className="sp-version">AIgal Engine v1.0.1</span>
+          <span className="sp-version">AIgal v1.0.1</span>
         </div>
       </nav>
 
       {/* 内容区 */}
       <main className="sp-content">
         <div className="sp-content-header">
-          <h2>{TABS.find((t) => t.id === activeTab)?.icon} {TABS.find((t) => t.id === activeTab)?.label}</h2>
+          <h2>{TABS.find((t) => t.id === activeTab)?.icon} {t(TABS.find((tab) => tab.id === activeTab)?.labelKey || '')}</h2>
         </div>
         <div className="sp-content-body">
           {renderContent()}

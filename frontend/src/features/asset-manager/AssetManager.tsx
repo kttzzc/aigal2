@@ -4,11 +4,13 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import type { AssetFile, AssetType } from '../../types';
 import { getAssets, uploadAsset, deleteAsset, getAssetUrl } from '../../services/api';
 import './asset-manager.css';
 
 export default function AssetManager() {
+  const { t } = useTranslation();
   const [assets, setAssets] = useState<AssetFile[]>([]);
   const [activeTab, setActiveTab] = useState<AssetType>('background');
   const [isUploading, setIsUploading] = useState(false);
@@ -22,7 +24,7 @@ export default function AssetManager() {
     try {
       const data = await getAssets();
       setAssets(data);
-    } catch { console.warn('无法加载素材'); }
+    } catch { console.warn(t('asset_manager.err_load')); }
   };
 
   const handleUpload = useCallback(async () => {
@@ -39,19 +41,19 @@ export default function AssetManager() {
           const asset = await uploadAsset(file, activeTab);
           setAssets((prev) => [...prev, asset]);
         }
-      } catch { console.error('上传失败'); }
+      } catch { console.error(t('asset_manager.err_upload')); }
       finally { setIsUploading(false); }
     };
     input.click();
   }, [activeTab]);
 
   const handleDelete = useCallback(async (asset: AssetFile) => {
-    if (!confirm(`确定删除 ${asset.filename}？`)) return;
+    if (!confirm(t('asset_manager.confirm_delete', { filename: asset.filename }))) return;
     try {
       await deleteAsset(asset.type, asset.filename);
       setAssets((prev) => prev.filter((a) => a.filename !== asset.filename || a.type !== asset.type));
-    } catch { console.error('删除失败'); }
-  }, []);
+    } catch { console.error(t('asset_manager.err_delete')); }
+  }, [t]);
 
   // 拖放上传
   const handleDrop = useCallback(async (e: React.DragEvent) => {
@@ -64,20 +66,20 @@ export default function AssetManager() {
         const asset = await uploadAsset(file, activeTab);
         setAssets((prev) => [...prev, asset]);
       }
-    } catch { console.error('上传失败'); }
+    } catch { console.error(t('asset_manager.err_upload')); }
     finally { setIsUploading(false); }
-  }, [activeTab]);
+  }, [activeTab, t]);
 
   return (
     <div className="asset-manager">
       {/* 标签切换 */}
       <div className="am-tabs">
         <button className={`am-tab ${activeTab === 'background' ? 'active' : ''}`}
-          onClick={() => setActiveTab('background')}>🖼️ 背景图</button>
+          onClick={() => setActiveTab('background')}>{t('asset_manager.tab_bg')}</button>
         <button className={`am-tab ${activeTab === 'character' ? 'active' : ''}`}
-          onClick={() => setActiveTab('character')}>👤 角色立绘</button>
+          onClick={() => setActiveTab('character')}>{t('asset_manager.tab_char')}</button>
         <button className="btn btn-primary am-upload-btn" onClick={handleUpload} disabled={isUploading}>
-          {isUploading ? '上传中...' : '+ 上传'}
+          {isUploading ? t('asset_manager.btn_uploading') : t('asset_manager.btn_upload')}
         </button>
       </div>
 
@@ -85,8 +87,8 @@ export default function AssetManager() {
       <div className="am-grid" onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
         {filteredAssets.length === 0 ? (
           <div className="am-empty">
-            <p>暂无{activeTab === 'background' ? '背景图' : '角色立绘'}</p>
-            <p className="am-empty-hint">点击上传按钮或拖拽文件到此处</p>
+            <p>{activeTab === 'background' ? t('asset_manager.empty_bg') : t('asset_manager.empty_char')}</p>
+            <p className="am-empty-hint">{t('asset_manager.empty_hint')}</p>
           </div>
         ) : (
           <AnimatePresence>
@@ -112,7 +114,7 @@ export default function AssetManager() {
         {preview && (
           <motion.div className="am-preview-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={() => setPreview(null)}>
-            <img src={preview} alt="预览" className="am-preview-image" />
+            <img src={preview} alt={t('asset_manager.preview')} className="am-preview-image" />
           </motion.div>
         )}
       </AnimatePresence>

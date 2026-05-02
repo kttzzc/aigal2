@@ -4,6 +4,7 @@
  */
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import './game-menu.css';
 
 interface GameMenuProps {
@@ -21,7 +22,7 @@ interface GameMenuProps {
 
 interface MenuItem {
   id: string;
-  label: string;
+  labelKey: string;
   icon: string;
   onClick: () => void;
 }
@@ -39,18 +40,19 @@ export default function GameMenu({
   onBackToTitle,
 }: GameMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
   const menuItems: MenuItem[] = [
-    { id: 'settings', label: '设置', icon: '⚙️', onClick: onOpenSettings },
-    { id: 'world-book', label: '世界书', icon: '📖', onClick: onOpenWorldBook },
-    { id: 'prompt', label: '提示词', icon: '📝', onClick: onOpenPromptEditor },
-    { id: 'assets', label: '素材', icon: '🎨', onClick: onOpenAssetManager },
-    { id: 'ui-editor', label: 'UI编辑', icon: '🖌️', onClick: onOpenUIEditor },
-    { id: 'variables', label: '变量', icon: '📊', onClick: onOpenVariablePanel },
-    { id: 'timeline', label: '时间线', icon: '⏱️', onClick: onOpenTimeline },
-    { id: 'save', label: '保存', icon: '💾', onClick: onSave },
-    { id: 'load', label: '读档', icon: '📂', onClick: onLoad },
-    { id: 'title', label: '标题', icon: '🏠', onClick: onBackToTitle },
+    { id: 'settings', labelKey: 'game_menu.settings', icon: '⚙️', onClick: onOpenSettings },
+    { id: 'world-book', labelKey: 'game_menu.world_book', icon: '📖', onClick: onOpenWorldBook },
+    { id: 'prompt', labelKey: 'game_menu.prompt', icon: '📝', onClick: onOpenPromptEditor },
+    { id: 'assets', labelKey: 'game_menu.assets', icon: '🎨', onClick: onOpenAssetManager },
+    { id: 'ui-editor', labelKey: 'game_menu.ui_editor', icon: '🖌️', onClick: onOpenUIEditor },
+    { id: 'variables', labelKey: 'game_menu.variables', icon: '📊', onClick: onOpenVariablePanel },
+    { id: 'timeline', labelKey: 'game_menu.timeline', icon: '⏱️', onClick: onOpenTimeline },
+    { id: 'save', labelKey: 'game_menu.save', icon: '💾', onClick: onSave },
+    { id: 'load', labelKey: 'game_menu.load', icon: '📂', onClick: onLoad },
+    { id: 'title', labelKey: 'game_menu.title', icon: '🏠', onClick: onBackToTitle },
   ];
 
   const handleItemClick = (item: MenuItem) => {
@@ -106,7 +108,7 @@ export default function GameMenu({
                   whileHover={{ x: -4 }}
                 >
                   <span className="menu-item-icon">{item.icon}</span>
-                  <span className="menu-item-label">{item.label}</span>
+                  <span className="menu-item-label">{t(item.labelKey)}</span>
                 </motion.button>
               ))}
             </motion.div>

@@ -5,6 +5,7 @@
  */
 import { useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useTypewriter } from '../../hooks/use-typewriter';
 import { useTTS } from '../../hooks/use-tts';
 import type { AIMessage, TTSConfig } from '../../types';
@@ -36,6 +37,7 @@ export default function DialogueBox({
   onTypingComplete,
   ttsConfig,
 }: DialogueBoxProps) {
+  const { t } = useTranslation();
   const { displayedText, isTyping, skip, isComplete } = useTypewriter({
     text: message?.message || '',
     speed: textSpeed,
@@ -69,7 +71,7 @@ export default function DialogueBox({
     e.stopPropagation();
 
     if (!ttsConfig?.apiKey) {
-      alert('TTS 未配置，请在设置中填写 MiniMax API Key');
+      alert(t('settings.tts.err_no_api_key', 'TTS 未配置，请在设置中填写 MiniMax API Key'));
       return;
     }
 
@@ -150,7 +152,7 @@ export default function DialogueBox({
             <button
               className={`dialogue-tts-btn ${isPlaying ? 'playing' : ''} ${ttsLoading ? 'loading' : ''}`}
               onClick={handleSpeak}
-              title={isPlaying ? '停止朗读' : '朗读此段'}
+              title={isPlaying ? t('game_view.stop_tts', '停止语音') : t('game_view.play_tts', '播放语音')}
             >
               {ttsLoading ? '⏳' : isPlaying ? '⏹️' : '🔊'}
             </button>

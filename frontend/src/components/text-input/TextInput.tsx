@@ -4,6 +4,7 @@
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import './text-input.css';
 
 interface TextInputProps {
@@ -21,8 +22,9 @@ export default function TextInput({
   visible,
   isLoading = false,
   onSubmit,
-  placeholder = '输入你的回应...',
+  placeholder,
 }: TextInputProps) {
+  const { t } = useTranslation();
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -80,7 +82,7 @@ export default function TextInput({
               className={`text-input-send ${value.trim() ? 'active' : ''}`}
               onClick={handleSubmit}
               disabled={!value.trim() || isLoading}
-              title="发送"
+              title={t('game_view.btn_send', '发送')}
             >
               {isLoading ? (
                 <span className="send-loading" />
@@ -101,7 +103,7 @@ export default function TextInput({
               )}
             </button>
           </div>
-          <p className="text-input-hint">按 Enter 发送，Shift+Enter 换行</p>
+          <p className="text-input-hint">{t('game_view.input_hint', '按 Enter 发送，Shift+Enter 换行')}</p>
         </motion.div>
       )}
     </AnimatePresence>

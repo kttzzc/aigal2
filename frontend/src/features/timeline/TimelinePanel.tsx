@@ -4,10 +4,12 @@
  */
 import { useGameStore } from '../../store/game-store';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import './timeline-panel.css';
 
 export default function TimelinePanel() {
   const { conversationHistory, rollbackTo } = useGameStore();
+  const { t } = useTranslation();
 
   // 提取所有有 time 节点的记录，并保留原始的 index 以用于回溯
   const timelineEvents = conversationHistory
@@ -15,7 +17,7 @@ export default function TimelinePanel() {
     .filter((item): item is { time: NonNullable<typeof item.time>, originalIndex: number } => !!item.time);
 
   const handleRollback = (index: number, timeId: number) => {
-    if (confirm(`确定要回溯到时间点 ${timeId} 吗？之后的所有进度将会丢失！`)) {
+    if (confirm(t('timeline.confirm_rollback', { timeId }))) {
       rollbackTo(index);
     }
   };
@@ -23,7 +25,7 @@ export default function TimelinePanel() {
   return (
     <div className="timeline-panel">
       {timelineEvents.length === 0 ? (
-        <div className="timeline-empty">暂无时间线记录</div>
+        <div className="timeline-empty">{t('timeline.empty')}</div>
       ) : (
         <div className="timeline-list">
           <AnimatePresence>
@@ -48,7 +50,7 @@ export default function TimelinePanel() {
                         className="btn btn-ghost btn-sm"
                         onClick={() => handleRollback(event.originalIndex, event.time.time_id)}
                       >
-                        ⏪ 回溯到此时间点
+                        {t('timeline.btn_rollback')}
                       </button>
                     </div>
                   )}

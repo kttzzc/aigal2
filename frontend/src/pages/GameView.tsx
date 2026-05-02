@@ -5,6 +5,7 @@
  */
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useGameStore } from '../store/game-store';
 import type { AppSettings } from '../types';
 import BackgroundLayer from '../components/background-layer/BackgroundLayer';
@@ -30,6 +31,7 @@ type PanelType = 'settings' | 'worldBook' | 'promptEditor' | 'assetManager' | 'u
 
 export default function GameView() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const {
     messages,
     currentIndex,
@@ -154,7 +156,7 @@ export default function GameView() {
         visible={showInput || (!isGameStarted && !isLoading)}
         isLoading={isLoading}
         onSubmit={handlePlayerInput}
-        placeholder={isGameStarted ? '继续你的故事...' : '输入开场白，开始你的冒险...'}
+        placeholder={isGameStarted ? t('game_view.placeholder_continue') : t('game_view.placeholder_start')}
       />
 
       {/* ======= 菜单模式切换 ======= */}
@@ -185,46 +187,46 @@ export default function GameView() {
 
       {/* ======= 功能面板（两种模式共用） ======= */}
       {/* 存档 */}
-      <ModalPanel isOpen={activePanel === 'save'} onClose={() => setActivePanel(null)} title="💾 保存游戏">
+      <ModalPanel isOpen={activePanel === 'save'} onClose={() => setActivePanel(null)} title={t('game_view.modal_save')}>
         <SaveLoadPanel mode="save" onClose={() => setActivePanel(null)} />
       </ModalPanel>
 
-      <ModalPanel isOpen={activePanel === 'load'} onClose={() => setActivePanel(null)} title="📂 读取存档">
+      <ModalPanel isOpen={activePanel === 'load'} onClose={() => setActivePanel(null)} title={t('game_view.modal_load')}>
         <SaveLoadPanel mode="load" onClose={() => setActivePanel(null)} />
       </ModalPanel>
 
-      <ModalPanel isOpen={activePanel === 'timeline'} onClose={() => setActivePanel(null)} title="⏱️ 时间线" width={600}>
+      <ModalPanel isOpen={activePanel === 'timeline'} onClose={() => setActivePanel(null)} title={t('game_view.modal_timeline')} width={600}>
         <TimelinePanel />
       </ModalPanel>
 
-      <ModalPanel isOpen={activePanel === 'debug'} onClose={() => setActivePanel(null)} title="🐛 调试模式" width={800}>
+      <ModalPanel isOpen={activePanel === 'debug'} onClose={() => setActivePanel(null)} title={t('game_view.modal_debug')} width={800}>
         <DebugPanel />
       </ModalPanel>
 
       {/* 经典模式下的功能面板（实验性模式下这些在 /settings 页面） */}
       {!useExperimentalUI && (
         <>
-          <ModalPanel isOpen={activePanel === 'settings'} onClose={() => setActivePanel(null)} title="⚙️ 设置">
+          <ModalPanel isOpen={activePanel === 'settings'} onClose={() => setActivePanel(null)} title={t('game_view.modal_settings')}>
             <SettingsPanel />
           </ModalPanel>
 
-          <ModalPanel isOpen={activePanel === 'worldBook'} onClose={() => setActivePanel(null)} title="📖 世界书" width={700}>
+          <ModalPanel isOpen={activePanel === 'worldBook'} onClose={() => setActivePanel(null)} title={t('game_view.modal_world_book')} width={700}>
             <WorldBookPanel />
           </ModalPanel>
 
-          <ModalPanel isOpen={activePanel === 'promptEditor'} onClose={() => setActivePanel(null)} title="📝 系统提示词" width={900}>
+          <ModalPanel isOpen={activePanel === 'promptEditor'} onClose={() => setActivePanel(null)} title={t('game_view.modal_prompt')} width={900}>
             <PromptEditor />
           </ModalPanel>
 
-          <ModalPanel isOpen={activePanel === 'assetManager'} onClose={() => setActivePanel(null)} title="🎨 素材管理" width={800}>
+          <ModalPanel isOpen={activePanel === 'assetManager'} onClose={() => setActivePanel(null)} title={t('game_view.modal_assets')} width={800}>
             <AssetManager />
           </ModalPanel>
 
-          <ModalPanel isOpen={activePanel === 'uiEditor'} onClose={() => setActivePanel(null)} title="🖌️ 自定义 UI" fullScreen>
+          <ModalPanel isOpen={activePanel === 'uiEditor'} onClose={() => setActivePanel(null)} title={t('game_view.modal_ui')} fullScreen>
             <UIEditor />
           </ModalPanel>
 
-          <ModalPanel isOpen={activePanel === 'variables'} onClose={() => setActivePanel(null)} title="📊 全局变量">
+          <ModalPanel isOpen={activePanel === 'variables'} onClose={() => setActivePanel(null)} title={t('game_view.modal_variables')}>
             <VariablePanel />
           </ModalPanel>
         </>

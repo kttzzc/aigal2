@@ -3,11 +3,13 @@
  * 支持 Markdown 编辑和文件切换
  */
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { PromptFile } from '../../types';
 import { getPromptFiles, savePromptFile, createPromptFile, deletePromptFile, setActivePrompt } from '../../services/api';
 import './prompt-editor.css';
 
 export default function PromptEditor() {
+  const { t } = useTranslation();
   const [files, setFiles] = useState<PromptFile[]>([]);
   const [activeFile, setActiveFile] = useState<string | null>(null);
   const [content, setContent] = useState('');
@@ -28,7 +30,7 @@ export default function PromptEditor() {
         setActiveFile(data[0].filename);
         setContent(data[0].content);
       }
-    } catch { console.warn('无法加载提示词文件'); }
+    } catch { console.warn(t('prompt_editor.err_load')); }
   };
 
   const handleSelectFile = useCallback((filename: string) => {
@@ -53,25 +55,26 @@ export default function PromptEditor() {
       setFiles((prev) => prev.map((f) => (f.filename === activeFile ? updated : f)));
       // 保存后自动将其设为当前使用的提示词，确保修改立刻生效
       await setActivePrompt(activeFile);
-      setHasChanges(false);
-    } catch { console.error('保存失败'); }
-    finally { setIsSaving(false); }
+      await loadFiles();
+    } catch {
+      console.error(t('prompt_editor.err_save'));
+    } finally { setIsSaving(false); }
   }, [activeFile, content]);
 
   const handleCreate = useCallback(async () => {
     if (!newName.trim()) return;
     try {
-      const file = await createPromptFile(newName.trim(), '# 系统提示词\n\n在这里编写你的系统提示词...');
+      const file = await createPromptFile(newName.trim(), t('prompt_editor.default_content_template'));
       setFiles((prev) => [...prev, file]);
       setActiveFile(file.filename);
       setContent(file.content);
       setNewName('');
       setIsCreating(false);
-    } catch { console.error('创建失败'); }
+    } catch { console.error(t('prompt_editor.err_create')); }
   }, [newName]);
 
   const handleDelete = useCallback(async (filename: string) => {
-    if (!confirm('确定删除该提示词文件？')) return;
+    if (!confirm(t('prompt_editor.confirm_delete'))) return;
     try {
       await deletePromptFile(filename);
       setFiles((prev) => prev.filter((f) => f.filename !== filename));
@@ -80,16 +83,16 @@ export default function PromptEditor() {
         if (remaining.length > 0) handleSelectFile(remaining[0].filename);
         else { setActiveFile(null); setContent(''); }
       }
-    } catch { console.error('删除失败'); }
-  }, [activeFile, files, handleSelectFile]);
+    } catch { console.error(t('prompt_editor.err_delete')); }
+  }, [files, activeFile, handleSelectFile]);
 
   const handleSetActive = useCallback(async () => {
     if (!activeFile) return;
     try {
       await setActivePrompt(activeFile);
-      alert(`已将 "${currentFile?.name}" 设为当前使用的提示词`);
-    } catch { console.error('设置失败'); }
-  }, [activeFile, currentFile]);
+      alert(`${t('prompt_editor.success_set')} "${currentFile?.name}"`);
+    } catch { console.error(t('prompt_editor.err_set')); }
+  }, [activeFile, currentFile, t]);
 
   // 快捷键 Ctrl+S 保存
   useEffect(() => {
@@ -108,16 +111,26 @@ export default function PromptEditor() {
       {/* 文件列表侧栏 */}
       <div className="pe-sidebar">
         <div className="pe-sidebar-header">
-          <span className="pe-sidebar-title">提示词文件</span>
+          <span className="pe-sidebar-title">{t('prompt_editor.title')}</span>
           {isCreating ? (
             <div className="pe-create-form">
-              <input value={newName} onChange={(e) => setNewName(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleCreate()} placeholder="文件名..." autoFocus />
-              <button onClick={handleCreate}>✓</button>
-              <button onClick={() => setIsCreating(false)}>✕</button>
+              <input
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder={t('prompt_editor.placeholder_name')}
+                autoFocus
+                onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
+              />
+              <div className="pe-create-actions">
+                <button className="btn btn-primary btn-sm" onClick={handleCreate}>{t('prompt_editor.btn_ok')}</button>
+                <button className="btn btn-ghost btn-sm" onClick={() => setIsCreating(false)}>{t('prompt_editor.btn_cancel')}</button>
+              </div>
             </div>
           ) : (
-            <button className="pe-add-btn" onClick={() => setIsCreating(true)}>+</button>
+            <button className="btn btn-secondary pe-create-btn" onClick={() => setIsCreating(true)}>
+              + {t('prompt_editor.btn_create')}
+            </button>
           )}
         </div>
         <div className="pe-file-list">
@@ -127,7 +140,7 @@ export default function PromptEditor() {
               onClick={() => handleSelectFile(file.filename)}>
               <span className="pe-file-icon">📝</span>
               <span className="pe-file-name">{file.name}</span>
-              {file.isDefault && <span className="pe-file-badge">默认</span>}
+              {file.isDefault && <span className="pe-file-badge">{t('prompt_editor.current')}</span>}
               {!file.isDefault && (
                 <button className="pe-file-delete" onClick={(e) => { e.stopPropagation(); handleDelete(file.filename); }}>×</button>
               )}
@@ -142,19 +155,19 @@ export default function PromptEditor() {
           <>
             <div className="pe-toolbar">
               <span className="pe-filename">{currentFile?.name}.md</span>
-              {hasChanges && <span className="pe-unsaved">● 未保存</span>}
+              {hasChanges && <span className="pe-unsaved">● {t('prompt_editor.unsaved')}</span>}
               <div className="pe-toolbar-actions">
-                <button className="btn btn-ghost" onClick={handleSetActive}>设为当前</button>
+                <button className="btn btn-ghost" onClick={handleSetActive}>{t('prompt_editor.btn_set_active')}</button>
                 <button className="btn btn-primary" onClick={handleSave} disabled={isSaving}>
-                  {isSaving ? '保存中...' : '保存'}
+                  {isSaving ? t('prompt_editor.btn_saving') : t('prompt_editor.btn_save')}
                 </button>
               </div>
             </div>
             <textarea className="pe-textarea" value={content} onChange={(e) => handleContentChange(e.target.value)}
-              placeholder="在此编写系统提示词 (Markdown 格式)..." spellCheck={false} />
+              placeholder={t('prompt_editor.placeholder_content')} spellCheck={false} />
           </>
         ) : (
-          <div className="pe-empty">选择或创建一个提示词文件</div>
+          <div className="pe-empty">{t('prompt_editor.empty_selection')}</div>
         )}
       </div>
     </div>

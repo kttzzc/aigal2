@@ -4,28 +4,30 @@
  */
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import './about-page.css';
-
-const TECH_STACK = [
-  { name: 'React 18', desc: 'UI 框架', icon: '⚛️' },
-  { name: 'TypeScript', desc: '类型安全', icon: '🔷' },
-  { name: 'Vite', desc: '构建工具', icon: '⚡' },
-  { name: 'Zustand', desc: '状态管理', icon: '🐻' },
-  { name: 'FastAPI', desc: '后端框架', icon: '🐍' },
-  { name: 'Framer Motion', desc: '动画引擎', icon: '🎞️' },
-];
-
-const FEATURES = [
-  { name: '智能叙事', desc: 'AI 实时生成无限分支剧情', icon: '✨' },
-  { name: '角色系统', desc: '多角色立绘与场景切换', icon: '🎭' },
-  { name: '世界书', desc: '可自定义的世界观知识注入', icon: '📖' },
-  { name: '时间线回溯', desc: '穿越回任意剧情节点', icon: '⏪' },
-  { name: 'TTS 语音', desc: 'MiniMax TTS 角色语音合成', icon: '🔊' },
-  { name: '调试模式', desc: '实时查看/修改 AI 通信数据', icon: '🐛' },
-];
 
 export default function AboutPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const TECH_STACK = [
+    { name: 'React 18', desc: t('about.tech_1_desc'), icon: '⚛️' },
+    { name: 'TypeScript', desc: t('about.tech_2_desc'), icon: '🔷' },
+    { name: 'Vite', desc: t('about.tech_3_desc'), icon: '⚡' },
+    { name: 'Zustand', desc: t('about.tech_4_desc'), icon: '🐻' },
+    { name: 'FastAPI', desc: t('about.tech_5_desc'), icon: '🐍' },
+    { name: 'Framer Motion', desc: t('about.tech_6_desc'), icon: '🎞️' },
+  ];
+
+  const FEATURES = [
+    { name: t('about.feature_1_name'), desc: t('about.feature_1_desc'), icon: '✨' },
+    { name: t('about.feature_2_name'), desc: t('about.feature_2_desc'), icon: '🎭' },
+    { name: t('about.feature_3_name'), desc: t('about.feature_3_desc'), icon: '📖' },
+    { name: t('about.feature_4_name'), desc: t('about.feature_4_desc'), icon: '⏪' },
+    { name: t('about.feature_5_name'), desc: t('about.feature_5_desc'), icon: '🔊' },
+    { name: t('about.feature_6_name'), desc: t('about.feature_6_desc'), icon: '🐛' },
+  ];
 
   return (
     <div className="about-page">
@@ -57,7 +59,7 @@ export default function AboutPage() {
           onClick={() => navigate(-1)}
           whileHover={{ x: -3 }}
         >
-          ← 返回
+          {t('about.btn_back')}
         </motion.button>
 
         {/* 标题区 */}
@@ -71,22 +73,20 @@ export default function AboutPage() {
             <span className="about-title-ai">AI</span>
             <span className="about-title-gal">gal</span>
           </motion.h1>
-          <p className="about-subtitle">AI 驱动的视觉小说引擎</p>
+          <p className="about-subtitle">{t('about.title_sub')}</p>
           <p className="about-version">v1.01</p>
         </header>
 
         {/* 介绍 */}
         <section className="about-section">
           <p className="about-desc">
-            AIgal 是一个由大语言模型（LLM）驱动的现代化 Galgame 引擎。
-            玩家通过自然语言与 AI 互动，AI 实时生成剧情、对话、场景和角色表演，
-            创造无限分支的沉浸式叙事体验。
+            {t('about.desc')}
           </p>
         </section>
 
         {/* 特性 */}
         <section className="about-section">
-          <h2 className="about-section-title">核心特性</h2>
+          <h2 className="about-section-title">{t('about.features_title')}</h2>
           <div className="about-grid">
             {FEATURES.map((feat, idx) => (
               <motion.div
@@ -106,7 +106,7 @@ export default function AboutPage() {
 
         {/* 技术栈 */}
         <section className="about-section">
-          <h2 className="about-section-title">技术栈</h2>
+          <h2 className="about-section-title">{t('about.tech_stack')}</h2>
           <div className="about-tech-list">
             {TECH_STACK.map((tech, idx) => (
               <motion.div
@@ -126,7 +126,7 @@ export default function AboutPage() {
 
         {/* GitHub 仓库 */}
         <section className="about-section about-repo">
-          <h2 className="about-section-title">开源仓库</h2>
+          <h2 className="about-section-title">{t('about.repo')}</h2>
           <a
             className="about-repo-link"
             href="https://github.com/kttzzc/aigal2"
@@ -144,7 +144,7 @@ export default function AboutPage() {
 
         {/* 底部 */}
         <footer className="about-footer">
-          <p>AIgal Engine — 让 AI 成为你的故事讲述者 ✨</p>
+          <p>{t('about.footer')}</p>
         </footer>
       </motion.div>
     </div>

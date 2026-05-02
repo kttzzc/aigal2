@@ -7,11 +7,13 @@
 import { useState, useEffect } from 'react';
 import { useGameStore } from '../../store/game-store';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import './debug-panel.css';
 
 type Tab = 'history' | 'current' | 'llm';
 
 export default function DebugPanel() {
+  const { t } = useTranslation();
   const { conversationHistory, updateCurrentResponse } = useGameStore();
   const [activeTab, setActiveTab] = useState<Tab>('current');
   const [currentJsonText, setCurrentJsonText] = useState('');
@@ -41,7 +43,7 @@ export default function DebugPanel() {
       updateCurrentResponse(parsed);
       setTimeout(() => setIsSaving(false), 300); // 制造一点视觉反馈
     } catch (e: any) {
-      setJsonError(`JSON 解析失败: ${e.message}`);
+      setJsonError(t('debug_panel.err_json', { msg: e.message }));
       setIsSaving(false);
     }
   };
@@ -58,19 +60,19 @@ export default function DebugPanel() {
           className={`dp-tab ${activeTab === 'current' ? 'active' : ''}`}
           onClick={() => setActiveTab('current')}
         >
-          当前对话 JSON 修改
+          {t('debug_panel.tab_current')}
         </button>
         <button
           className={`dp-tab ${activeTab === 'history' ? 'active' : ''}`}
           onClick={() => setActiveTab('history')}
         >
-          历史会话原数据
+          {t('debug_panel.tab_history')}
         </button>
         <button
           className={`dp-tab ${activeTab === 'llm' ? 'active' : ''}`}
           onClick={() => setActiveTab('llm')}
         >
-          LLM 原始请求
+          {t('debug_panel.tab_llm')}
         </button>
       </div>
 
@@ -79,10 +81,10 @@ export default function DebugPanel() {
         {activeTab === 'current' && (
           <div className="dp-current-view">
             {conversationHistory.length === 0 ? (
-              <div className="dp-empty">当前没有对话记录</div>
+              <div className="dp-empty">{t('debug_panel.empty_current')}</div>
             ) : (
               <>
-                <p className="dp-hint">在这里可以直接修改本轮对话的原始响应。点击保存后，游戏界面将立刻同步。</p>
+                <p className="dp-hint">{t('debug_panel.hint_current')}</p>
                 <textarea
                   className="dp-textarea"
                   value={currentJsonText}
@@ -96,7 +98,7 @@ export default function DebugPanel() {
                     onClick={handleSaveJson}
                     disabled={isSaving}
                   >
-                    {isSaving ? '保存中...' : '💾 保存修改'}
+                    {isSaving ? t('debug_panel.btn_saving') : t('debug_panel.btn_save')}
                   </button>
                 </div>
               </>
@@ -108,15 +110,15 @@ export default function DebugPanel() {
         {activeTab === 'history' && (
           <div className="dp-history-view">
             {conversationHistory.length === 0 ? (
-              <div className="dp-empty">暂无历史记录</div>
+              <div className="dp-empty">{t('debug_panel.empty_history')}</div>
             ) : (
               <div className="dp-history-list">
                 {conversationHistory.map((entry, idx) => (
                   <div key={idx} className="dp-history-item">
                     <div className="dp-history-header" onClick={() => toggleExpand(idx)}>
-                      <span className="dp-history-turn">Turn {idx + 1}</span>
+                      <span className="dp-history-turn">{t('debug_panel.turn', { num: idx + 1 })}</span>
                       <span className="dp-history-preview">
-                        {entry.playerInput.substring(0, 20) || '（无输入）'} ...
+                        {entry.playerInput.substring(0, 20) || t('debug_panel.no_input')} ...
                       </span>
                       <span className="dp-history-toggle">
                         {expandedIndex === idx ? '▼' : '▶'}
@@ -132,19 +134,19 @@ export default function DebugPanel() {
                           exit={{ height: 0, opacity: 0 }}
                         >
                           <div className="dp-code-block">
-                            <div className="dp-code-title">↗️ Request 发送体</div>
+                            <div className="dp-code-title">{t('debug_panel.req_title')}</div>
                             <pre>
                               {entry.rawRequest
                                 ? JSON.stringify(entry.rawRequest, null, 2)
-                                : '（无原始请求数据）'}
+                                : t('debug_panel.no_req')}
                             </pre>
                           </div>
                           <div className="dp-code-block">
-                            <div className="dp-code-title">↙️ Response 响应体</div>
+                            <div className="dp-code-title">{t('debug_panel.res_title')}</div>
                             <pre>
                               {entry.rawResponse
                                 ? JSON.stringify(entry.rawResponse, null, 2)
-                                : '（无原始响应数据）'}
+                                : t('debug_panel.no_res')}
                             </pre>
                           </div>
                         </motion.div>
@@ -161,7 +163,7 @@ export default function DebugPanel() {
         {activeTab === 'llm' && (
           <div className="dp-history-view">
             {conversationHistory.length === 0 ? (
-              <div className="dp-empty">暂无 LLM 请求记录</div>
+              <div className="dp-empty">{t('debug_panel.empty_llm')}</div>
             ) : (
               <div className="dp-history-list">
                 {conversationHistory.map((entry, idx) => {
@@ -169,9 +171,9 @@ export default function DebugPanel() {
                   return (
                     <div key={idx} className="dp-history-item">
                       <div className="dp-history-header" onClick={() => toggleExpand(idx)}>
-                        <span className="dp-history-turn">Turn {idx + 1}</span>
+                        <span className="dp-history-turn">{t('debug_panel.turn', { num: idx + 1 })}</span>
                         <span className="dp-history-preview">
-                          {llmReq ? `→ ${llmReq.model} @ ${llmReq.base_url}` : '(无调试数据)'}
+                          {llmReq ? `→ ${llmReq.model} @ ${llmReq.base_url}` : t('debug_panel.no_debug')}
                         </span>
                         <span className="dp-history-toggle">
                           {expandedIndex === idx ? '▼' : '▶'}
@@ -187,11 +189,11 @@ export default function DebugPanel() {
                             exit={{ height: 0, opacity: 0 }}
                           >
                             <div className="dp-code-block">
-                              <div className="dp-code-title">📡 发往 LLM 的请求体（已脱敏）</div>
+                              <div className="dp-code-title">{t('debug_panel.llm_title')}</div>
                               <pre>
                                 {llmReq
                                   ? JSON.stringify(llmReq, null, 2)
-                                  : '(无调试数据，可能是早期会话)'}
+                                  : t('debug_panel.no_llm_data')}
                               </pre>
                             </div>
                           </motion.div>

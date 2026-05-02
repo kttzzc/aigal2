@@ -3,6 +3,7 @@
  * 三栏代码编辑器（HTML/CSS/JS），通过 iframe 沙箱实时预览
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import './ui-editor.css';
 
 interface UIEditorProps {
@@ -48,7 +49,7 @@ const DEFAULT_CSS = `.game-container {
   line-height: 1.8;
 }`;
 
-const DEFAULT_JS = `// 监听来自主应用的游戏数据
+const DEFAULT_JS = `// Listen to game data from main app
 window.addEventListener('message', (event) => {
   const data = event.data;
   if (data.type === 'GAME_DATA') {
@@ -66,6 +67,7 @@ export default function UIEditor({
   initialJs = DEFAULT_JS,
   onSave,
 }: UIEditorProps) {
+  const { t } = useTranslation();
   const [html, setHtml] = useState(initialHtml);
   const [css, setCss] = useState(initialCss);
   const [js, setJs] = useState(initialJs);
@@ -127,16 +129,16 @@ export default function UIEditor({
             </button>
           ))}
           <button className="btn btn-primary ue-save-btn" onClick={handleSave}>
-            💾 保存
+            {t('ui_editor.btn_save')}
           </button>
         </div>
         <textarea className="ue-code-area" value={getActiveCode()}
           onChange={(e) => setActiveCode(e.target.value)}
-          spellCheck={false} placeholder={`输入 ${activeTab.toUpperCase()} 代码...`} />
+          spellCheck={false} placeholder={t('ui_editor.placeholder', { type: activeTab.toUpperCase() })} />
       </div>
       <div className="ue-preview-section">
-        <div className="ue-preview-header">预览</div>
-        <iframe ref={iframeRef} className="ue-preview-frame" sandbox="allow-scripts" title="UI 预览" />
+        <div className="ue-preview-header">{t('ui_editor.preview')}</div>
+        <iframe ref={iframeRef} className="ue-preview-frame" sandbox="allow-scripts" title={t('ui_editor.preview')} />
       </div>
     </div>
   );

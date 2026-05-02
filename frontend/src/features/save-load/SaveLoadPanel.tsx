@@ -4,6 +4,7 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useGameStore } from '../../store/game-store';
 import { getSaves, createSave, deleteSave } from '../../services/api';
 import './save-load-panel.css';
@@ -26,6 +27,7 @@ interface SaveLoadPanelProps {
 }
 
 export default function SaveLoadPanel({ mode, onClose }: SaveLoadPanelProps) {
+  const { t } = useTranslation();
   const [saves, setSaves] = useState<SaveEntry[]>([]);
   const [saveName, setSaveName] = useState('');
   const [isBusy, setIsBusy] = useState(false);
@@ -47,7 +49,7 @@ export default function SaveLoadPanel({ mode, onClose }: SaveLoadPanelProps) {
       const data = await getSaves();
       setSaves(data as unknown as SaveEntry[]);
     } catch {
-      console.warn('无法加载存档列表');
+      console.warn(t('save_load.err_load_list'));
     }
   };
 
@@ -66,7 +68,7 @@ export default function SaveLoadPanel({ mode, onClose }: SaveLoadPanelProps) {
       setSaveName('');
       await loadSaves();
     } catch {
-      console.error('保存失败');
+      console.error(t('save_load.err_save'));
     } finally {
       setIsBusy(false);
     }
@@ -74,7 +76,7 @@ export default function SaveLoadPanel({ mode, onClose }: SaveLoadPanelProps) {
 
   /** 加载存档 */
   const handleLoad = useCallback(async (save: SaveEntry) => {
-    if (!confirm(`确定要加载存档「${save.name}」吗？当前进度将丢失。`)) return;
+    if (!confirm(t('save_load.confirm_load', { name: save.name }))) return;
     loadSave({
       conversationHistory: save.history as unknown as typeof conversationHistory,
       variables: save.variables,
@@ -84,14 +86,14 @@ export default function SaveLoadPanel({ mode, onClose }: SaveLoadPanelProps) {
 
   /** 删除存档 */
   const handleDelete = useCallback(async (id: string) => {
-    if (!confirm('确定要删除这个存档吗？')) return;
+    if (!confirm(t('save_load.confirm_delete'))) return;
     try {
       await deleteSave(id);
       setSaves((prev) => prev.filter((s) => s.id !== id));
     } catch {
-      console.error('删除存档失败');
+      console.error(t('save_load.err_delete'));
     }
-  }, []);
+  }, [t]);
 
   const formatTime = (ts: number) => {
     return new Date(ts * 1000).toLocaleString('zh-CN');
@@ -100,7 +102,7 @@ export default function SaveLoadPanel({ mode, onClose }: SaveLoadPanelProps) {
   return (
     <div className="save-load-panel">
       <h3 className="slp-title">
-        {mode === 'save' ? '💾 保存游戏' : '📂 读取存档'}
+        {mode === 'save' ? t('save_load.title_save') : t('save_load.title_load')}
       </h3>
 
       {/* 保存模式：新存档输入 */}
@@ -111,7 +113,7 @@ export default function SaveLoadPanel({ mode, onClose }: SaveLoadPanelProps) {
             value={saveName}
             onChange={(e) => setSaveName(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSave()}
-            placeholder="输入存档名称..."
+            placeholder={t('save_load.placeholder_name')}
             autoFocus
           />
           <button
@@ -119,7 +121,7 @@ export default function SaveLoadPanel({ mode, onClose }: SaveLoadPanelProps) {
             onClick={handleSave}
             disabled={isBusy || !saveName.trim()}
           >
-            {isBusy ? '保存中...' : '保存'}
+            {isBusy ? t('save_load.btn_saving') : t('save_load.btn_save')}
           </button>
         </div>
       )}
@@ -127,7 +129,7 @@ export default function SaveLoadPanel({ mode, onClose }: SaveLoadPanelProps) {
       {/* 存档列表 */}
       <div className="slp-list">
         {saves.length === 0 ? (
-          <div className="slp-empty">暂无存档</div>
+          <div className="slp-empty">{t('save_load.empty')}</div>
         ) : (
           <AnimatePresence>
             {saves.map((save) => (
@@ -143,13 +145,13 @@ export default function SaveLoadPanel({ mode, onClose }: SaveLoadPanelProps) {
                   <span className="slp-item-name">{save.name}</span>
                   <span className="slp-item-time">{formatTime(save.createdAt)}</span>
                   <span className="slp-item-detail">
-                    {Object.keys(save.variables).length} 个变量
+                    {t('save_load.vars_count', { count: Object.keys(save.variables).length })}
                   </span>
                 </div>
                 <div className="slp-item-actions">
                   {mode === 'load' && (
                     <button className="btn btn-primary btn-sm" onClick={() => handleLoad(save)}>
-                      加载
+                      {t('save_load.btn_load')}
                     </button>
                   )}
                   <button className="btn btn-ghost btn-sm" onClick={() => handleDelete(save.id)}>

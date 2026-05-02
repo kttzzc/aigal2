@@ -4,6 +4,7 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import type { WorldBook, WorldBookEntry } from '../../types';
 import {
   getWorldBooks,
@@ -16,6 +17,7 @@ import {
 import './world-book-panel.css';
 
 export default function WorldBookPanel() {
+  const { t } = useTranslation();
   const [books, setBooks] = useState<WorldBook[]>([]);
   const [activeBookId, setActiveBookId] = useState<string | null>(null);
   const [editingEntry, setEditingEntry] = useState<WorldBookEntry | null>(null);
@@ -34,7 +36,7 @@ export default function WorldBookPanel() {
         setActiveBookId(data[0].id);
       }
     } catch {
-      console.warn('无法加载世界书');
+      console.warn(t('world_book.err_load'));
     }
   };
 
@@ -51,36 +53,33 @@ export default function WorldBookPanel() {
       setNewBookName('');
       setIsCreating(false);
     } catch {
-      console.error('创建世界书失败');
+      console.error(t('world_book.err_create_book'));
     }
-  }, [newBookName]);
+  }, [newBookName, t]);
 
   const handleDeleteBook = useCallback(async (id: string) => {
-    if (!confirm('确定要删除这个世界书吗？')) return;
+    if (!confirm(t('world_book.confirm_delete_book'))) return;
     try {
       await deleteWorldBook(id);
       setBooks((prev) => prev.filter((b) => b.id !== id));
       if (activeBookId === id) {
-        setActiveBookId(books.find((b) => b.id !== id)?.id || null);
+        setActiveBookId(null);
       }
     } catch {
-      console.error('删除世界书失败');
+      console.error(t('world_book.err_delete_book'));
     }
-  }, [activeBookId, books]);
+  }, [activeBookId, t]);
 
-  const handleAddEntry = useCallback(() => {
-    if (!activeBook) return;
-    const newEntry: WorldBookEntry = {
-      id: `entry-${Date.now()}`,
+  const handleAddEntry = () => {
+    setEditingEntry({
+      id: crypto.randomUUID(),
+      name: t('world_book.new_entry'),
       keywords: [],
       content: '',
-      enabled: true,
-      priority: 0,
-      name: '新条目',
       alwaysActive: false,
-    };
-    setEditingEntry(newEntry);
-  }, [activeBook]);
+      priority: 100,
+    });
+  };
 
   const handleSaveEntry = useCallback(async (entry: WorldBookEntry) => {
     if (!activeBook) return;
@@ -89,37 +88,39 @@ export default function WorldBookPanel() {
       ? activeBook.entries.map((e) => (e.id === entry.id ? entry : e))
       : [...activeBook.entries, entry];
     try {
-      const updated = await updateWorldBook(activeBook.id, { entries: newEntries });
-      setBooks((prev) => prev.map((b) => (b.id === updated.id ? updated : b)));
+      const updatedBook = await updateWorldBook(activeBook.id, { entries: newEntries });
+      setBooks((prev) => prev.map((b) => (b.id === activeBookId ? updatedBook : b)));
       setEditingEntry(null);
     } catch {
-      console.error('保存条目失败');
+      console.error(t('world_book.err_save_entry'));
     }
-  }, [activeBook]);
+  }, [activeBook, activeBookId, t]);
 
   const handleToggleEntry = useCallback(async (entryId: string) => {
     if (!activeBook) return;
-    const newEntries = activeBook.entries.map((e) =>
+    const updatedEntries = activeBook.entries.map((e) =>
       e.id === entryId ? { ...e, enabled: !e.enabled } : e
     );
+    const updatedBook = { ...activeBook, entries: updatedEntries };
     try {
-      const updated = await updateWorldBook(activeBook.id, { entries: newEntries });
-      setBooks((prev) => prev.map((b) => (b.id === updated.id ? updated : b)));
+      await updateWorldBook(updatedBook.id, updatedBook);
+      setBooks((prev) => prev.map((b) => (b.id === activeBookId ? updatedBook : b)));
     } catch {
-      console.error('切换条目失败');
+      console.error(t('world_book.err_toggle_entry'));
     }
-  }, [activeBook]);
+  }, [activeBook, activeBookId, t]);
 
   const handleDeleteEntry = useCallback(async (entryId: string) => {
     if (!activeBook) return;
-    const newEntries = activeBook.entries.filter((e) => e.id !== entryId);
+    const updatedEntries = activeBook.entries.filter((e) => e.id !== entryId);
+    const updatedBook = { ...activeBook, entries: updatedEntries };
     try {
-      const updated = await updateWorldBook(activeBook.id, { entries: newEntries });
-      setBooks((prev) => prev.map((b) => (b.id === updated.id ? updated : b)));
+      await updateWorldBook(updatedBook.id, updatedBook);
+      setBooks((prev) => prev.map((b) => (b.id === activeBookId ? updatedBook : b)));
     } catch {
-      console.error('删除条目失败');
+      console.error(t('world_book.err_delete_entry'));
     }
-  }, [activeBook]);
+  }, [activeBook, activeBookId, t]);
 
   const handleExport = useCallback(async () => {
     if (!activeBook) return;
@@ -132,9 +133,9 @@ export default function WorldBookPanel() {
       a.click();
       URL.revokeObjectURL(url);
     } catch {
-      console.error('导出失败');
+      console.error(t('world_book.err_export'));
     }
-  }, [activeBook]);
+  }, [activeBook, t]);
 
   const handleImport = useCallback(async () => {
     const input = document.createElement('input');
@@ -144,15 +145,15 @@ export default function WorldBookPanel() {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (!file) return;
       try {
-        const book = await importWorldBook(file);
-        setBooks((prev) => [...prev, book]);
-        setActiveBookId(book.id);
+        const newBook = await importWorldBook(file);
+        setBooks((prev) => [...prev, newBook]);
+        setActiveBookId(newBook.id);
       } catch {
-        console.error('导入失败');
+        console.error(t('world_book.err_import'));
       }
     };
     input.click();
-  }, []);
+  }, [t]);
 
   return (
     <div className="world-book-panel">
@@ -171,31 +172,31 @@ export default function WorldBookPanel() {
             </button>
           ))}
           {isCreating ? (
-            <div className="wb-tab-create">
-              <input type="text" value={newBookName}
-                onChange={(e) => setNewBookName(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleCreateBook()}
-                placeholder="名称..." autoFocus />
-              <button onClick={handleCreateBook}>✓</button>
-              <button onClick={() => setIsCreating(false)}>✕</button>
+            <div className="wb-create-form">
+                <input type="text" value={newBookName} onChange={(e) => setNewBookName(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleCreateBook()}
+                  placeholder={t('world_book.placeholder_name')} autoFocus />
+                <button className="btn btn-primary" onClick={handleCreateBook}>✓</button>
+                <button className="btn btn-ghost" onClick={() => setIsCreating(false)}>✕</button>
             </div>
           ) : (
             <button className="wb-tab-add" onClick={() => setIsCreating(true)}>+</button>
           )}
         </div>
         <div className="wb-actions">
-          <button className="btn btn-ghost" onClick={handleImport}>📥 导入</button>
-          <button className="btn btn-ghost" onClick={handleExport} disabled={!activeBook}>📤 导出</button>
+          <button className="btn btn-ghost" onClick={handleImport}>{t('world_book.btn_import')}</button>
+          <button className="btn btn-ghost" onClick={handleExport} disabled={!activeBook}>{t('world_book.btn_export')}</button>
         </div>
       </div>
 
       {/* 条目列表 */}
-      {activeBook ? (
-        <div className="wb-entries">
-          <div className="wb-entries-header">
-            <span className="wb-entries-count">{activeBook.entries.length} 个条目</span>
-            <button className="btn btn-primary" onClick={handleAddEntry}>+ 添加条目</button>
-          </div>
+      <div className="wb-main">
+        {activeBook ? (
+          <>
+            <div className="wb-entries-header">
+              <span className="wb-entries-count">{t('world_book.entries_count', { count: activeBook.entries.length })}</span>
+              <button className="btn btn-primary" onClick={handleAddEntry}>{t('world_book.btn_add_entry')}</button>
+            </div>
           <AnimatePresence>
             {activeBook.entries.map((entry) => (
               <motion.div key={entry.id}
@@ -207,10 +208,12 @@ export default function WorldBookPanel() {
                     onClick={() => handleToggleEntry(entry.id)}>
                     {entry.enabled ? '●' : '○'}
                   </button>
-                  <span className="wb-entry-name">{entry.name}</span>
-                  {entry.alwaysActive && (
-                    <span className="wb-always-active-badge">📌 常驻</span>
-                  )}
+                  <div className="wb-entry-info">
+                    <span className="wb-entry-name">{entry.name}</span>
+                    {entry.alwaysActive ? (
+                      <span className="wb-always-active-badge">{t('world_book.always_active_badge')}</span>
+                    ) : null}
+                  </div>
                   <div className="wb-entry-keywords">
                     {entry.keywords.map((kw, i) => (
                       <span key={i} className="wb-keyword-tag">{kw}</span>
@@ -227,12 +230,11 @@ export default function WorldBookPanel() {
               </motion.div>
             ))}
           </AnimatePresence>
-        </div>
-      ) : (
-        <div className="wb-empty">
-          <p>还没有世界书，点击 "+" 创建一个或导入已有的世界书</p>
-        </div>
-      )}
+          </>
+        ) : (
+          <p>{t('world_book.empty_books')}</p>
+        )}
+      </div>
 
       {/* 条目编辑弹窗 */}
       <AnimatePresence>
@@ -246,19 +248,24 @@ export default function WorldBookPanel() {
 }
 
 /** 条目编辑器子组件 */
-function EntryEditor({ entry, onSave, onClose }: {
+function EntryEditor({
+  entry,
+  onSave,
+  onClose,
+}: {
   entry: WorldBookEntry;
   onSave: (entry: WorldBookEntry) => void;
   onClose: () => void;
 }) {
-  const [form, setForm] = useState<WorldBookEntry>(entry);
-  const [keywordInput, setKeywordInput] = useState('');
+  const { t } = useTranslation();
+  const [form, setForm] = useState(entry);
+  const [newKeyword, setNewKeyword] = useState('');
 
   const handleAddKeyword = () => {
-    const kw = keywordInput.trim();
+    const kw = newKeyword.trim();
     if (kw && !form.keywords.includes(kw)) {
       setForm((prev) => ({ ...prev, keywords: [...prev.keywords, kw] }));
-      setKeywordInput('');
+      setNewKeyword('');
     }
   };
 
@@ -267,68 +274,65 @@ function EntryEditor({ entry, onSave, onClose }: {
   };
 
   return (
-    <motion.div className="wb-editor-overlay"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <motion.div className="wb-editor"
-        initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}>
-        <h3>编辑条目</h3>
-        <div className="wb-editor-field">
-          <label>名称</label>
-          <input type="text" value={form.name}
-            onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))} />
+    <div className="wb-editor-overlay" onClick={onClose}>
+      <div className="wb-editor-modal" onClick={(e) => e.stopPropagation()}>
+        <h3>{t('world_book.edit_title')}</h3>
+        <div className="wb-form">
+          <label>{t('world_book.label_name')}</label>
+          <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         </div>
         <div className="wb-editor-field">
-          <label className="wb-toggle-label">
-            <span>常驻触发</span>
+          <div className="wb-always-active-toggle">
+            <span>{t('world_book.label_always')}</span>
             <button
-              type="button"
-              className={`wb-toggle-btn ${form.alwaysActive ? 'on' : 'off'}`}
-              onClick={() => setForm((prev) => ({ ...prev, alwaysActive: !prev.alwaysActive }))}
+              className={`btn btn-sm ${form.alwaysActive ? 'btn-primary' : 'btn-ghost'}`}
+              onClick={() => setForm({ ...form, alwaysActive: !form.alwaysActive })}
             >
-              {form.alwaysActive ? '开启' : '关闭'}
+              {form.alwaysActive ? t('world_book.always_on') : t('world_book.always_off')}
             </button>
-          </label>
-          <p className="wb-field-hint">
-            {form.alwaysActive
-              ? '此条目会在每次 AI 请求时自动注入，无需关键词匹配'
-              : '关闭时需要通过关键词匹配触发'}
-          </p>
-        </div>
-        {!form.alwaysActive && (
-          <div className="wb-editor-field">
-            <label>关键词</label>
-            <div className="wb-keywords-input">
-              <input type="text" value={keywordInput}
-                onChange={(e) => setKeywordInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleAddKeyword()}
-                placeholder="输入关键词后回车添加" />
-            </div>
-            <div className="wb-keywords-list">
+            <p className="wb-hint">
+              {form.alwaysActive
+              ? t('world_book.always_hint_on')
+              : t('world_book.always_hint_off')}
+            </p>
+          </div>
+
+          {!form.alwaysActive && (
+            <>
+              <label>{t('world_book.label_keywords')}</label>
+              <div className="wb-keywords-input">
+                <input
+                  type="text"
+                  value={newKeyword}
+                  onChange={(e) => setNewKeyword(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleAddKeyword()}
+                  placeholder={t('world_book.placeholder_keyword')} />
+                <button className="btn btn-secondary" onClick={handleAddKeyword}>+</button>
+              </div>
+              <div className="wb-keywords-list">
               {form.keywords.map((kw) => (
                 <span key={kw} className="wb-keyword-tag">
                   {kw}<button onClick={() => handleRemoveKeyword(kw)}>×</button>
                 </span>
               ))}
             </div>
-          </div>
-        )}
-        <div className="wb-editor-field">
-          <label>内容</label>
-          <textarea value={form.content}
-            onChange={(e) => setForm((prev) => ({ ...prev, content: e.target.value }))}
-            rows={8} placeholder="条目内容..." />
-        </div>
-        <div className="wb-editor-field">
-          <label>优先级</label>
-          <input type="number" value={form.priority}
-            onChange={(e) => setForm((prev) => ({ ...prev, priority: parseInt(e.target.value) || 0 }))} />
+            </>
+          )}
+
+          <label>{t('world_book.label_content')}</label>
+          <textarea
+            value={form.content}
+            onChange={(e) => setForm({ ...form, content: e.target.value })}
+            rows={8} placeholder={t('world_book.placeholder_content')} />
+
+          <label>{t('world_book.label_priority')}</label>
+          <input type="number" value={form.priority} onChange={(e) => setForm({ ...form, priority: parseInt(e.target.value) || 0 })} />
         </div>
         <div className="wb-editor-actions">
-          <button className="btn btn-secondary" onClick={onClose}>取消</button>
-          <button className="btn btn-primary" onClick={() => onSave(form)}>保存</button>
+          <button className="btn btn-secondary" onClick={onClose}>{t('world_book.btn_cancel')}</button>
+          <button className="btn btn-primary" onClick={() => onSave(form)}>{t('world_book.btn_save')}</button>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }

@@ -4,10 +4,12 @@
  */
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useGameStore } from '../../store/game-store';
 import './variable-panel.css';
 
 export default function VariablePanel() {
+  const { t } = useTranslation();
   const variables = useGameStore((s) => s.variables);
   const updateVariables = useGameStore((s) => s.updateVariables);
   const [editingKey, setEditingKey] = useState<string | null>(null);
@@ -29,11 +31,9 @@ export default function VariablePanel() {
 
   return (
     <div className="variable-panel">
-      <p className="vp-description">
-        以下变量由 AI 自动生成和更新，也可以手动编辑。变量会在每次与 AI 对话时自动发送。
-      </p>
+      <p className="vp-description">{t('variables.desc')}</p>
       {entries.length === 0 ? (
-        <div className="vp-empty">暂无变量（开始游戏后 AI 会自动创建变量）</div>
+        <div className="vp-empty">{t('variables.empty')}</div>
       ) : (
         <div className="vp-list">
           <AnimatePresence>
